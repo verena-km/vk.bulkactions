@@ -6,30 +6,51 @@
       metal:use-macro="context/main_template/macros/master">
 <body>
 
-  <metal:custom_title fill-slot="content-title">
-    <h1 tal:replace="structure context/@@title" />
+  <metal:main fill-slot="main">
 
-    <!-- @@title view template: -->
-    <!--
-    <h1 tal:define="title context/Title" tal:condition="title" tal:content="title">
-      Title or id
-    </h1>
-    -->
+    <div tal:condition="python: not view.valid">
 
-  </metal:custom_title>
+        <h1 class="documentFirstHeading">xmind-Datei hochladen</h1>
 
-  <metal:custom_description fill-slot="content-description">
-    <p tal:replace="structure context/@@description" />
-  </metal:custom_description>
+        <p class="documentDescription">
+           Wählen Sie eine xmind-Datei zum Hochladen aus. Die Namen der Knoten werden als Verzeichnisse in Plone erstellt.
+        </p>
 
-  <metal:content-core fill-slot="content-core">
-  <metal:block define-macro="content-core">
+       <form
+            name="upload"
+            method="post"
+            enctype="multipart/form-data"
+            class="pat-formunloadalert"
+            tal:attributes="action request/URL">
 
-    <h2>Main content</h2>
-    <!--<div tal:replace="view/my_custom_view_method" />-->
-    <!--<div tal:replace="context/my_custom_field" />-->
+            <div
+                class="field">
+                <input
+                    type="file"
+                    name="mindmap_file"
+                    id="mindmap_file"
+                />
+            </div>
 
-  </metal:block>
-  </metal:content-core>
+            <div class="plone-btn-group">
+                <input
+                    type="submit"
+                    name="form.button.Upload"
+                    class="plone-btn plone-btn-success save"
+                    value="Hochladen"
+                    i18n:attributes="value" />
+
+                <input
+                    type="submit"
+                    name="form.button.Cancel"
+                    class="plone-btn plone-btn-default cancel"
+                    value="Abbrechen"
+                    i18n:attributes="value" />
+            </div>
+        </form>
+
+    </div>
+
+  </metal:main>    
 </body>
 </html>
