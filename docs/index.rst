@@ -1,0 +1,5 @@
+==============
+vk.bulkactions
+==============
+
+User documentation

@@ -1,0 +1,6 @@
+[report]
+include =
+    src/vk/*
+omit =
+    */test*
+    */upgrades/*
