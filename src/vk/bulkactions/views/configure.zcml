@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="vk.bulkactions">
+
+ <!-- -*- extra stuff goes here -*- -->
+
+  <browser:page
+    name="bulkmove"
+    for="*"
+    class=".bulk_move_view.BulkMoveView"
+    template="bulk_move_view.pt"
+    permission="zope2.View"
+    layer="vk.bulkactions.interfaces.IVkBulkactionsLayer"
+    />
+
+</configure>
