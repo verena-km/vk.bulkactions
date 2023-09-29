@@ -24,13 +24,13 @@ class BulkMoveView(BrowserView):
     def __call__(self):
         # Implement your own actions:
 
-        ## Formular soll in mehreren Schritten abgearbeitet werden
-        ## 1. Hochladen der Datei
-        ## 2. Anzeige des Ergebnisses der Prüfung auf existierende Pfade
-        ## 3. Verschieben nach Bestätigung durchführen
+        # Formular soll in mehreren Schritten abgearbeitet werden
+        # 1. Hochladen der Datei
+        # 2. Anzeige des Ergebnisses der Prüfung auf existierende Pfade
+        # 3. Verschieben nach Bestätigung durchführen
         ##
-        ### Problematik ist, dass die aus der Datei eingelesen Daten (die actions) bei der Bestätigung
-        ### nochmals mitgesandt werden müssen - da die View neu augerufen wird.
+        # Problematik ist, dass die aus der Datei eingelesen Daten (die actions) bei der Bestätigung
+        # nochmals mitgesandt werden müssen - da die View neu augerufen wird.
         # TODO ggf. noch Verwendung neuer id implementieren?
         # TODO Check was ist mit Workflow State und Metadaten (Owner .. date ..)
 
@@ -52,7 +52,8 @@ class BulkMoveView(BrowserView):
 
         # Schritt 1: Upload Button gedrückt
         if "form.button.Upload" in form and "instructions_file" in form:
-            file = form["instructions_file"]  # ZPublisher.HTTPRequest.FileUpload
+            # ZPublisher.HTTPRequest.FileUpload
+            file = form["instructions_file"]
             self.read_actions(file)
             self.check_actions()
 
@@ -79,7 +80,8 @@ class BulkMoveView(BrowserView):
         # Abbrechen in Schritt 1 und Schritt 2
         if "form.button.Cancel" in form:
             IStatusMessage(self.request).add(("Vorgang abgebrochen"))
-            self.request.response.redirect("{0}".format(getSite().absolute_url()))
+            self.request.response.redirect(
+                "{0}".format(getSite().absolute_url()))
             return False
 
         return self.index()

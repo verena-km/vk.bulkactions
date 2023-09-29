@@ -1,147 +1,168 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="vk.bulkactions"
-      metal:use-macro="context/main_template/macros/master">
-<body>
-
-  <metal:main fill-slot="main">
-
-    <div tal:condition="python: not view.valid">
-
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  i18n:domain="vk.bulkactions"
+  metal:use-macro="context/main_template/macros/master"
+>
+  <body>
+    <metal:main fill-slot="main">
+      <div tal:condition="python: not view.valid">
         <h1 class="documentFirstHeading">CSV-Datei hochladen</h1>
-
         <p class="documentDescription">
-           Wählen sie eine csv-Datei mit Informationen zu den zu verschiebenden Inhalten aus.
+          Wählen sie eine csv-Datei mit Informationen zu den zu verschiebenden
+          Inhalten aus.
         </p>
-
         <p>
-           Die Datei sollte wie folgt aufgebaut sein:
-           <pre>
+          Die Datei sollte wie folgt aufgebaut sein:
+          <pre>
 source, target
 /verz1/datei1, /verz4
 /verz2, /verz5/verz6
-/verz3/*, /verz7  </pre>
+/verz3/*, /verz7  </pre
+          >
         </p>
-
         <p>
-        Als Quelle kann ein Verzeichnis, oder ein einzelner Inhalt angegeben werden
-        Besitzer und Workflow-Status bleiben erhalten, das Änderungsdatum wird auf den Zeitpunkt des Verschiebens aktualisiert.
+          Als Quelle kann ein Verzeichnis, oder ein einzelner Inhalt angegeben
+          werden Besitzer und Workflow-Status bleiben erhalten, das
+          Änderungsdatum wird auf den Zeitpunkt des Verschiebens aktualisiert.
         </p>
-
-       <form
-            name="upload"
-            method="post"
-            enctype="multipart/form-data"
-            class="pat-formunloadalert"
-            tal:attributes="action request/URL">
-
-            <div
-                class="field">
-                <input
-                    type="file"
-                    name="instructions_file"
-                    id="instructions_file"
-                />
-            </div>
-
-            <div class="plone-btn-group">
-                <input
-                    type="submit"
-                    name="form.button.Upload"
-                    class="plone-btn plone-btn-success save"
-                    value="Hochladen"
-                    i18n:attributes="value" />
-
-                <input
-                    type="submit"
-                    name="form.button.Cancel"
-                    class="plone-btn plone-btn-default cancel"
-                    value="Abbrechen"
-                    i18n:attributes="value" />
-            </div>
-        </form>
-
-    </div>
-
-    <div tal:condition="python:view.valid and not view.move_completed">
-        <h1 class="documentFirstHeading">Inhalte verschieben</h1>
-
-        <p>
-            Folgende Operationen wurden eingelesen. Nicht vorhandene Objekte oder Objekte falschen Typs sind rot gekennzeichnet:
-        </p>
-
-        <table>
-            <tr>
-                <th>source</th>
-                <th>target</th>
-            </tr>
-        
-            <tr tal:repeat="action view/actions">
-                <td tal:condition="python:action['source_ok']" tal:attributes="style string:color:green;" tal:content="action/source">/x/y/z</td>
-                <td tal:condition="python:not action['source_ok']" tal:attributes="style string:color:red;" tal:content="action/source">/x/y/z</td>
-
-                <td tal:condition="python:action['target_ok']" tal:attributes="style string:color:green;" tal:content="action/target">/a/b/c</td>
-                <td tal:condition="python:not action['target_ok']" tal:attributes="style string:color:red;" tal:content="action/target">/a/b/c</td>
-            </tr>
-
-        </table>
-        <br/>
-        <p>
-            Die nachfolgend aufgeführten Verschiebe-Operationen werden durchgeführt:
-        </p>
-
-        <table>
-            <tr>
-                <th>source</th>
-                <th>target</th>
-            </tr>
-        
-            <tr tal:repeat="action view/valid_actions">
-                <td tal:attributes="style string:color:green;" tal:content="action/source">/x/y/z</td>
-                <td tal:attributes="style string:color:green;" tal:content="action/target">/a/b/c</td>
-                
-            </tr>
-
-        </table>
-        <br/>
         <form
-            name="move"
-            method="post"
-            enctype="multipart/form-data"
-            class="pat-formunloadalert"
-            tal:attributes="action request/URL">
-
-                <input
-                    type="hidden"
-                    name="valid_actions_dict"
-                    tal:attributes="value view/valid_actions"
-                    />
-
-            <div class="plone-btn-group">
-                <input
-                    type="submit"
-                    name="form.button.Move"
-                    class="plone-btn plone-btn-success save"
-                    value="Verschieben"
-                    i18n:attributes="value" />
-
-                <input
-                    type="submit"
-                    name="form.button.Cancel"
-                    class="plone-btn plone-btn-default cancel"
-                    value="Cancel"
-                    i18n:attributes="value" />
-            </div>
+          name="upload"
+          method="post"
+          enctype="multipart/form-data"
+          class="pat-formunloadalert"
+          tal:attributes="action request/URL"
+        >
+          <div class="field">
+            <input
+              type="file"
+              name="instructions_file"
+              id="instructions_file"
+            />
+          </div>
+          <div class="plone-btn-group">
+            <input
+              type="submit"
+              name="form.button.Upload"
+              class="plone-btn plone-btn-success save"
+              value="Hochladen"
+              i18n:attributes="value"
+            />
+            <input
+              type="submit"
+              name="form.button.Cancel"
+              class="plone-btn plone-btn-default cancel"
+              value="Abbrechen"
+              i18n:attributes="value"
+            />
+          </div>
         </form>
-
-    </div>
-
-    <div tal:condition="python:view.valid and view.move_completed">
-        Es wurden <span tal:content="python: len(view.valid_actions)"/> Objekte verschoben.
-    </div> 
-
-  </metal:main>
-</body>
+      </div>
+      <div tal:condition="python:view.valid and not view.move_completed">
+        <h1 class="documentFirstHeading">Inhalte verschieben</h1>
+        <p>
+          Folgende Operationen wurden eingelesen. Nicht vorhandene Objekte oder
+          Objekte falschen Typs sind rot gekennzeichnet:
+        </p>
+        <table>
+          <tr>
+            <th>source</th>
+            <th>target</th>
+          </tr>
+          <tr tal:repeat="action view/actions">
+            <td
+              tal:condition="python:action['source_ok']"
+              tal:attributes="style string:color:green;"
+              tal:content="action/source"
+            >
+              /x/y/z
+            </td>
+            <td
+              tal:condition="python:not action['source_ok']"
+              tal:attributes="style string:color:red;"
+              tal:content="action/source"
+            >
+              /x/y/z
+            </td>
+            <td
+              tal:condition="python:action['target_ok']"
+              tal:attributes="style string:color:green;"
+              tal:content="action/target"
+            >
+              /a/b/c
+            </td>
+            <td
+              tal:condition="python:not action['target_ok']"
+              tal:attributes="style string:color:red;"
+              tal:content="action/target"
+            >
+              /a/b/c
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p>
+          Die nachfolgend aufgeführten Verschiebe-Operationen werden
+          durchgeführt:
+        </p>
+        <table>
+          <tr>
+            <th>source</th>
+            <th>target</th>
+          </tr>
+          <tr tal:repeat="action view/valid_actions">
+            <td
+              tal:attributes="style string:color:green;"
+              tal:content="action/source"
+            >
+              /x/y/z
+            </td>
+            <td
+              tal:attributes="style string:color:green;"
+              tal:content="action/target"
+            >
+              /a/b/c
+            </td>
+          </tr>
+        </table>
+        <br />
+        <form
+          name="move"
+          method="post"
+          enctype="multipart/form-data"
+          class="pat-formunloadalert"
+          tal:attributes="action request/URL"
+        >
+          <input
+            type="hidden"
+            name="valid_actions_dict"
+            tal:attributes="value view/valid_actions"
+          />
+          <div class="plone-btn-group">
+            <input
+              type="submit"
+              name="form.button.Move"
+              class="plone-btn plone-btn-success save"
+              value="Verschieben"
+              i18n:attributes="value"
+            />
+            <input
+              type="submit"
+              name="form.button.Cancel"
+              class="plone-btn plone-btn-default cancel"
+              value="Cancel"
+              i18n:attributes="value"
+            />
+          </div>
+        </form>
+      </div>
+      <div tal:condition="python:view.valid and view.move_completed">
+        Es wurden
+        <span tal:content="python: len(view.valid_actions)" /> Objekte
+        verschoben.
+      </div>
+    </metal:main>
+  </body>
 </html>
