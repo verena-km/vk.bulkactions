@@ -2,31 +2,6 @@
    If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide.html
    This text does not appear on PyPI or github. It is a comment.
 
-.. image:: https://github.com/collective/vk.bulkactions/actions/workflows/plone-package.yml/badge.svg
-    :target: https://github.com/collective/vk.bulkactions/actions/workflows/plone-package.yml
-
-.. image:: https://coveralls.io/repos/github/collective/vk.bulkactions/badge.svg?branch=main
-    :target: https://coveralls.io/github/collective/vk.bulkactions?branch=main
-    :alt: Coveralls
-
-.. image:: https://codecov.io/gh/collective/vk.bulkactions/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/collective/vk.bulkactions
-
-.. image:: https://img.shields.io/pypi/v/vk.bulkactions.svg
-    :target: https://pypi.python.org/pypi/vk.bulkactions/
-    :alt: Latest Version
-
-.. image:: https://img.shields.io/pypi/status/vk.bulkactions.svg
-    :target: https://pypi.python.org/pypi/vk.bulkactions
-    :alt: Egg Status
-
-.. image:: https://img.shields.io/pypi/pyversions/vk.bulkactions.svg?style=plastic   :alt: Supported - Python Versions
-
-.. image:: https://img.shields.io/pypi/l/vk.bulkactions.svg
-    :target: https://pypi.python.org/pypi/vk.bulkactions/
-    :alt: License
-
-
 ==============
 vk.bulkactions
 ==============
@@ -36,33 +11,21 @@ Plone Addon for bulk actions - create directory structure from mindmap, read mov
 Features
 --------
 
-- Can be bullet points
-
-
-Examples
---------
-
-This add-on can be seen in action at the following sites:
-- Is there a page on the internet where everybody can see the features?
-
-
-Documentation
--------------
-
-Full documentation for end users can be found in the "docs" folder, and is also available online at http://docs.plone.org/foo/bar
+- Create directory structure from xmind file (xmind 2023 and xmind 8)
+- Moves content given in a csv file with columns "source" and "target"
 
 
 Translations
 ------------
 
-This product has been translated into
-
-- Klingon (thanks, K'Plai)
+TODO
 
 
 Installation
 ------------
+Not yet released.
 
+(((
 Install vk.bulkactions by adding it to your buildout::
 
     [buildout]
@@ -74,7 +37,7 @@ Install vk.bulkactions by adding it to your buildout::
 
 
 and then running ``bin/buildout``
-
+)))
 
 Authors
 -------
@@ -93,16 +56,14 @@ Put your name here, you deserve it!
 Contribute
 ----------
 
-- Issue Tracker: https://github.com/collective/vk.bulkactions/issues
-- Source Code: https://github.com/collective/vk.bulkactions
-- Documentation: https://docs.plone.org/foo/bar
+- Issue Tracker: https://github.com/verena-km/vk.bulkactions/issues
+- Source Code: https://github.com/verena-km/vk.bulkactions
 
 
 Support
 -------
 
 If you are having issues, please let us know.
-We have a mailing list located at: project@example.com
 
 
 License

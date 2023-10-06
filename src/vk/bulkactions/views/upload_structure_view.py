@@ -6,28 +6,20 @@ from zope.interface import implementer
 from zope.interface import Interface
 from Products.statusmessages.interfaces import IStatusMessage
 from zipfile import ZipFile
-from json import loads
 from plone import api
-
-
-# from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+import json
+import xmltodict
 
 
 class IUploadStructureView(Interface):
     """Marker Interface for IUploadStructureView"""
 
-
 @implementer(IUploadStructureView)
 class UploadStructureView(BrowserView):
-    # If you want to define a template here, please remove the template from
-    # the configure.zcml registration of this view.
-    # template = ViewPageTemplateFile('upload_structure_view.pt')
 
     def __call__(self):
-        # Implement your own actions:
         self.valid = False  # valid Upload file
         self.message = ""
-
         self.number = 0
 
         form = self.request.form
@@ -36,8 +28,13 @@ class UploadStructureView(BrowserView):
             file = form["mindmap_file"]  # ZPublisher.HTTPRequest.FileUpload
             self.read_structure(file)
 
+            # TODO Refactoring 
             if self.valid:
-                self.create_structure(self.mindmap_list)
+                if self.format == "from_json": # xmind 23 format
+                    self.create_structure_json()
+                if self.format == "from_xml": # xmind-8 format
+                    self.create_structure_xml()
+
                 IStatusMessage(self.request).add(self.message)
                 self.request.response.redirect(
                     "{0}".format(api.portal.get().absolute_url()))
@@ -61,24 +58,34 @@ class UploadStructureView(BrowserView):
 
         try:
             with ZipFile(file, 'r') as zip_ref:
-                with zip_ref.open('content.json') as json_file:
-                    json_content = json_file.read()
-                    self.mindmap_list = loads(json_content)
-                    self.valid = True
+                files = zip_ref.namelist()
+                if 'content.json' in files:  # XMind 23
+                    with zip_ref.open('content.json') as json_file:
+                        json_content = json_file.read()
+                        self.mindmap_list = json.loads(json_content)
+                        self.valid = True
+                        self.format = "from_json"
+                else:
+                    if 'content.xml' in files: #  XMind 8 Update 6 (R3.7.6.201711210129)
+                        with zip_ref.open('content.xml') as xml_file:
+                            xml_content = xml_file.read()
+                            self.mindmap_list = xmltodict.parse(xml_content)
+                            self.valid = True
+                            self.format = "from_xml"
         except:
             self.message = "Keine gültige X-Mind-Datei."
 
-    def create_structure(self, file):
+    def create_structure_json(self):
 
         root_topic = self.mindmap_list[0]['rootTopic']
         portal = api.portal.get()
 
         for child in root_topic["children"]["attached"]:
-            self.create_tree(child, portal)
+            self.create_tree_json(child, portal)
 
         self.message = str(self.number)+" Verzeichnisse wurden erzeugt."
 
-    def create_tree(self, element, container):
+    def create_tree_json(self, element, container):
 
         folder = api.content.create(
             type='Folder',
@@ -86,11 +93,36 @@ class UploadStructureView(BrowserView):
             container=container)
 
         if "notes" in element:
-            print(element["notes"]["plain"])
             folder.description = element["notes"]["plain"]["content"]
 
         self.number = self.number + 1
 
         if "children" in element:
             for child in element["children"]["attached"]:
-                self.create_tree(child, folder)
+                self.create_tree_json(child, folder)
+
+    def create_structure_xml(self):
+
+        root_topic = self.mindmap_list['xmap-content']['sheet']['topic']
+        portal = api.portal.get()
+
+        for child in root_topic["children"]["topics"]["topic"]:
+            self.create_tree_xml(child, portal)
+
+        self.message = str(self.number)+" Verzeichnisse wurden erzeugt."
+
+    def create_tree_xml(self, element, container):
+
+        folder = api.content.create(
+            type='Folder',
+            title=element["title"],
+            container=container)
+
+        if "notes" in element:
+            folder.description = element["notes"]["plain"]
+
+        self.number = self.number + 1
+
+        if "children" in element:
+            for child in element["children"]["topics"]["topic"]:
+                self.create_tree_xml(child, folder)

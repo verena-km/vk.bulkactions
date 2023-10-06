@@ -13,7 +13,8 @@
 
         <p class="documentDescription">
           Wählen Sie eine xmind-Datei zum Hochladen aus. Die Namen der Knoten
-          werden als Verzeichnisse in Plone erstellt.
+          werden als Verzeichnisse in Plone erstellt. Notizen an Knoten werden als
+          Beschreibungstext verwendet.
         </p>
 
         <form
