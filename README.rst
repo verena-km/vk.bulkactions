@@ -39,20 +39,6 @@ Install vk.bulkactions by adding it to your buildout::
 and then running ``bin/buildout``
 )))
 
-Authors
--------
-
-Provided by awesome people ;)
-
-
-Contributors
-------------
-
-Put your name here, you deserve it!
-
-- ?
-
-
 Contribute
 ----------
 
