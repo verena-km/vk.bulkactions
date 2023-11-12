@@ -105,9 +105,13 @@ class UploadStructureView(BrowserView):
 
         root_topic = self.mindmap_list['xmap-content']['sheet']['topic']
         portal = api.portal.get()
+        topic = root_topic["children"]["topics"]["topic"]
 
-        for child in root_topic["children"]["topics"]["topic"]:
-            self.create_tree_xml(child, portal)
+        if isinstance(topic, dict):  # bei nur einem Knoten haben wir ein Dict im Dict
+            self.create_tree_xml(topic, portal)
+        else: # eine Liste mit Dicts
+            for child in topic:
+                self.create_tree_xml(child, portal)
 
         self.message = str(self.number)+" Verzeichnisse wurden erzeugt."
 
@@ -124,5 +128,10 @@ class UploadStructureView(BrowserView):
         self.number = self.number + 1
 
         if "children" in element:
-            for child in element["children"]["topics"]["topic"]:
-                self.create_tree_xml(child, folder)
+            topic = element["children"]["topics"]["topic"]
+           
+            if isinstance(topic, dict):  # bei nur einem Knoten haben wir ein Dict im Dict
+                self.create_tree_xml(topic, folder)
+            else: # eine Liste mit Dicts
+                for child in topic:
+                    self.create_tree_xml(child, folder)
