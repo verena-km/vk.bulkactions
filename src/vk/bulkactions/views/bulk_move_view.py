@@ -161,12 +161,13 @@ class BulkMoveView(BrowserView):
             ids = api.content.get(source_folder).keys()
             print(ids)
             for id in ids:
-                newaction = {}
-                newaction["source"] = source_folder + "/" + id
-                newaction["source_ok"] = True
-                newaction["target"] = action["target"]
-                newaction["target_ok"] = True
-                self.valid_actions.append(newaction)
+                if not id.startswith("."): # nur echte content ids - keine von wf-richtlinie, die fängt mit .an
+                    newaction = {}
+                    newaction["source"] = source_folder + "/" + id
+                    newaction["source_ok"] = True
+                    newaction["target"] = action["target"]
+                    newaction["target_ok"] = True
+                    self.valid_actions.append(newaction)
         else:
             self.filesmissing = True
 
