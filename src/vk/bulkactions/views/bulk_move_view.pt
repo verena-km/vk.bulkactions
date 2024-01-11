@@ -17,10 +17,10 @@
         <p>
           Die Datei sollte wie folgt aufgebaut sein:
           <pre>
-source, target
-/verz1/datei1, /verz4
-/verz2, /verz5/verz6
-/verz3/*, /verz7  </pre
+Quelle; Ziel
+/verz1/datei1; /verz4
+/verz2; /verz5/verz6
+/verz3/*; /verz7  </pre
           >
         </p>
         <p>
