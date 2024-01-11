@@ -36,6 +36,7 @@ class UploadStructureView(BrowserView):
                     self.create_structure_xml()
 
                 IStatusMessage(self.request).add(self.message)
+
                 self.request.response.redirect(
                     "{0}".format(api.portal.get().absolute_url()))
 
@@ -82,9 +83,11 @@ class UploadStructureView(BrowserView):
 
         for child in root_topic["children"]["attached"]:
             self.create_tree_json(child, portal)
-
+            
         self.message = str(self.number)+" Verzeichnisse wurden erzeugt."
 
+    # TODO in der Json-Variante fehlen noch
+    # richtlinie, local roles und veröffentlichen
     def create_tree_json(self, element, container):
 
         folder = api.content.create(
@@ -124,6 +127,30 @@ class UploadStructureView(BrowserView):
 
         if "notes" in element:
             folder.description = element["notes"]["plain"]
+
+        if "labels" in element:
+            #print(type(element["labels"]["label"]))
+            # bei einem Element str bei mehreren list
+            if isinstance(element["labels"]["label"], list):
+                labels = element["labels"]["label"]
+            else:
+                labels = [element["labels"]["label"]]
+            for label in labels:
+                if label == "rh_workflow_richtlinie":
+                    # setze richtlinie
+                    placefulWorkflowTool = api.portal.get_tool(name='portal_placeful_workflow')
+                    config = placefulWorkflowTool.getWorkflowPolicyConfig(folder)
+                    if config == None:
+                        folder.manage_addProduct['CMFPlacefulWorkflow'].manage_addWorkflowPolicyConfig()
+                        config = placefulWorkflowTool.getWorkflowPolicyConfig(folder)
+                        config.setPolicyIn('rh_workflow_richtlinie', update_security=True)
+                else:
+                    # setze local role
+                    print(folder.get_local_roles())
+                    folder.manage_addLocalRoles(label,('Reviewer',))
+        # Folder veröffentlichen
+        portal = api.portal.get()
+        api.content.transition(obj=folder, transition='publish')
 
         self.number = self.number + 1
 
