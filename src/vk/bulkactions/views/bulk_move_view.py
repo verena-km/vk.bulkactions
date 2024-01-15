@@ -108,23 +108,24 @@ class BulkMoveView(BrowserView):
 
         # erste Zeile korrekt
         firstline = lines[0].decode()
-        if firstline.split(",")[0].strip() != "source":
+        if firstline.split(";")[0].strip() != "Quelle":
             self.valid = False
-            self.message = 'Die erste Zeile muss aus "source, target" bestehen.'
+            self.message = 'Die erste Zeile muss aus "Quelle; Ziel" bestehen.'
             return
 
-        if firstline.split(",")[1].strip() != "target":
+        if firstline.split(";")[1].strip() != "Ziel":
             self.valid = False
-            self.message = 'Die erste Zeile muss aus "source, target" bestehen.'
+            self.message = 'Die erste Zeile muss mit "Quelle; Ziel" beginnen.'
             return
 
         # jede Zeile genau zwei elemente
         for line in lines[1:]:
-            line = line.decode()
-            linesplit = line.split(",")
-            if len(linesplit) != 2:
+            print(line)
+            line = line.decode('windows-1252') # TODO support utf8 and windows encoding
+            linesplit = line.split(";")
+            if len(linesplit) < 2:
                 self.valid = False
-                self.message = "Nicht alle Zeilen der Datei haben genau zwei Elemente."
+                self.message = "Nicht alle Zeilen der Datei haben mindestens zwei Elemente."
                 return
             else:
                 action = {
@@ -206,8 +207,11 @@ class BulkMoveView(BrowserView):
     def move_items(self):
 
         for action in self.valid_actions:
+            print(action)
             source_object = api.content.get(action["source"])
+            print(source_object)
             target_object = api.content.get(action["target"])
+            print(target_object)
 
             api.content.move(source_object, target_object)
         self.move_completed = True
