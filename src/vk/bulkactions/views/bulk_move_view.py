@@ -39,6 +39,10 @@ class BulkMoveView(BrowserView):
         # list of dicts for actions to run
         self.valid_actions = []
 
+        # dict for folder layouts
+        self.layoutdict = {}
+
+
         # Status flags
         self.valid = False  # valid Upload file
         # self.do_action = False
@@ -75,6 +79,7 @@ class BulkMoveView(BrowserView):
             self.valid = True
             # self.do_action = True
             self.move_items()
+            self.set_layouts()
             IStatusMessage(self.request).add(("Verschieben erfolgreich"))
 
         # Abbrechen in Schritt 1 und Schritt 2
@@ -168,6 +173,12 @@ class BulkMoveView(BrowserView):
                     newaction["target"] = action["target"]
                     newaction["target_ok"] = True
                     self.valid_actions.append(newaction)
+
+            # Auslesen des gesetzten Layouts auf dem Folder und speichern in Dictionary
+            layout = source_folder.getLayout()
+            self.layoutdict[action["target"]] = layout
+
+            
         else:
             self.filesmissing = True
 
@@ -193,9 +204,18 @@ class BulkMoveView(BrowserView):
             self.filesmissing = True
 
     def move_items(self):
+
         for action in self.valid_actions:
             source_object = api.content.get(action["source"])
             target_object = api.content.get(action["target"])
 
             api.content.move(source_object, target_object)
         self.move_completed = True
+
+    def set_layouts(self):
+
+        for key in self.layoutdict:
+            print(key)
+            print(self.layoutdict[key])
+            obj = api.content.get(key)
+            obj.setLayout(self.layoutdict[key])
