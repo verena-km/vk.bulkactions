@@ -45,7 +45,6 @@ class BulkMoveView(BrowserView):
 
         # Status flags
         self.valid = False  # valid Upload file
-        # self.do_action = False
         self.filesmissing = False
         self.move_completed = False
 
@@ -74,10 +73,12 @@ class BulkMoveView(BrowserView):
         # Schritt 2: Verschieben Button gedrückt
         if "form.button.Move" in form:
             self.valid_actions = eval(
-                form["valid_actions_dict"]
+                form["valid_actions_string"]
             )  # string can be trusted - View needs manager permission - TODO - find more secure solution
+            self.layoutdict = eval(
+                form["layoutdict_string"]
+            )
             self.valid = True
-            # self.do_action = True
             self.move_items()
             self.set_layouts()
             IStatusMessage(self.request).add(("Verschieben erfolgreich"))
@@ -120,7 +121,7 @@ class BulkMoveView(BrowserView):
 
         # jede Zeile genau zwei elemente
         for line in lines[1:]:
-            print(line)
+            #print(line)
             line = line.decode('windows-1252') # TODO support utf8 and windows encoding
             linesplit = line.split(";")
             if len(linesplit) < 2:
@@ -165,7 +166,6 @@ class BulkMoveView(BrowserView):
             # daraus mehrere Actions erzeugen
             # content von source ermitteln
             ids = api.content.get(source_folder).keys()
-            print(ids)
             for id in ids:
                 if not id.startswith("."): # nur echte content ids - keine von wf-richtlinie, die fängt mit .an
                     newaction = {}
@@ -175,10 +175,9 @@ class BulkMoveView(BrowserView):
                     newaction["target_ok"] = True
                     self.valid_actions.append(newaction)
 
-            # Auslesen des gesetzten Layouts auf dem Folder und speichern in Dictionary
-            layout = source_folder.getLayout()
+            # Auslesen des gesetzten Layouts auf dem Folder und speichern in Dictionary (Hidden Field)
+            layout = api.content.get(source_folder).getLayout()
             self.layoutdict[action["target"]] = layout
-
             
         else:
             self.filesmissing = True
@@ -205,9 +204,8 @@ class BulkMoveView(BrowserView):
             self.filesmissing = True
 
     def move_items(self):
-
+        print("MOVE OBJECTS")
         for action in self.valid_actions:
-            print(action)
             source_object = api.content.get(action["source"])
             print(source_object)
             target_object = api.content.get(action["target"])
@@ -217,9 +215,8 @@ class BulkMoveView(BrowserView):
         self.move_completed = True
 
     def set_layouts(self):
-
-        for key in self.layoutdict:
-            print(key)
-            print(self.layoutdict[key])
+        print("SET LAYOUT")
+        for key in self.layoutdict.keys():
+            print(key, ":", self.layoutdict[key])
             obj = api.content.get(key)
             obj.setLayout(self.layoutdict[key])

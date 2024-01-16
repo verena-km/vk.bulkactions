@@ -25,7 +25,7 @@ Quelle; Ziel
         </p>
         <p>
           Als Quelle kann ein Verzeichnis, oder ein einzelner Inhalt angegeben
-          werden Besitzer und Workflow-Status bleiben erhalten, das
+          werden. Besitzer und Workflow-Status bleiben erhalten, das
           Änderungsdatum wird auf den Zeitpunkt des Verschiebens aktualisiert.
         </p>
         <form
@@ -137,8 +137,14 @@ Quelle; Ziel
         >
           <input
             type="hidden"
-            name="valid_actions_dict"
+            name="valid_actions_string"
             tal:attributes="value view/valid_actions"
+          />
+
+          <input
+            type="hidden"
+            name="layoutdict_string"
+            tal:attributes="value view/layoutdict"
           />
           <div class="plone-btn-group">
             <input
