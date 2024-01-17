@@ -1,0 +1,28 @@
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  i18n:domain="vk.bulkactions"
+  metal:use-macro="context/main_template/macros/master"
+>
+  <body>
+    <metal:block fill-slot="main">
+      <h1>Löschen lokaler Rollen</h1>
+
+      <!-- Form Part -->
+      <div tal:condition="not: view/submitted">
+        <p>Bei Bestätigung werden alle lokalen Rollen unterhalb des akutellen Verzeichnisses gelöscht.</p>
+        <form method="post" tal:attributes="action request/URL">
+
+          <input name="Submit" type="submit" value="OK" />
+        </form>
+      </div>
+
+      <!-- Result Part -->
+      <div tal:condition="view/submitted">
+        <div tal:content="view/response_text">Name</div>
+      </div>
+    </metal:block>
+  </body>
+</html>

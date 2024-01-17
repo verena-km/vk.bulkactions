@@ -24,4 +24,13 @@
     layer="vk.bulkactions.interfaces.IVkBulkactionsLayer"
     />
 
+  <browser:page
+    name="remove_localroles"
+    for="*"
+    class=".remove_localroles_view.RemoveLocalrolesView"
+    template="remove_localroles_view.pt"
+    permission="zope2.View"
+    layer="vk.bulkactions.interfaces.IVkBulkactionsLayer"
+    />    
+
 </configure>
