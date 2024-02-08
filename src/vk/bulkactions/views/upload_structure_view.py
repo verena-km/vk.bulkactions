@@ -136,14 +136,14 @@ class UploadStructureView(BrowserView):
             else:
                 labels = [element["labels"]["label"]]
             for label in labels:
-                if label == "rh_workflow_richtlinie":
+                if label in ["rh_workflow_richtlinie","rh_team_richtlinie"]:
                     # setze richtlinie
                     placefulWorkflowTool = api.portal.get_tool(name='portal_placeful_workflow')
                     config = placefulWorkflowTool.getWorkflowPolicyConfig(folder)
                     if config == None:
                         folder.manage_addProduct['CMFPlacefulWorkflow'].manage_addWorkflowPolicyConfig()
                         config = placefulWorkflowTool.getWorkflowPolicyConfig(folder)
-                        config.setPolicyIn('rh_workflow_richtlinie', update_security=True)
+                        config.setPolicyIn(label, update_security=True)
                 else:
                     # setze local role
                     print(folder.get_local_roles())
