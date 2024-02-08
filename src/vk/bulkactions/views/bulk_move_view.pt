@@ -143,9 +143,16 @@ Quelle; Ziel
 
           <input
             type="hidden"
-            name="layoutdict_string"
-            tal:attributes="value view/layoutdict"
+            name="layout_dict_string"
+            tal:attributes="value view/layout_dict"
           />
+
+          <input
+            type="hidden"
+            name="default_page_dict_string"
+            tal:attributes="value view/default_page_dict"
+          />
+
           <div class="plone-btn-group">
             <input
               type="submit"

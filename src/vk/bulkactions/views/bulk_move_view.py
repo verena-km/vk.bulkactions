@@ -39,8 +39,9 @@ class BulkMoveView(BrowserView):
         # list of dicts for actions to run
         self.valid_actions = []
 
-        # dict for folder layouts
-        self.layoutdict = {}
+        # dict for folder layouts and default pages
+        self.layout_dict = {}
+        self.default_page_dict = {}
 
 
         # Status flags
@@ -75,12 +76,16 @@ class BulkMoveView(BrowserView):
             self.valid_actions = eval(
                 form["valid_actions_string"]
             )  # string can be trusted - View needs manager permission - TODO - find more secure solution
-            self.layoutdict = eval(
-                form["layoutdict_string"]
+            self.layout_dict = eval(
+                form["layout_dict_string"]
             )
+            self.default_page_dict = eval(
+                form["default_page_dict_string"]
+            )            
             self.valid = True
             self.move_items()
             self.set_layouts()
+            self.set_default_pages()
             IStatusMessage(self.request).add(("Verschieben erfolgreich"))
 
         # Abbrechen in Schritt 1 und Schritt 2
@@ -177,7 +182,13 @@ class BulkMoveView(BrowserView):
 
             # Auslesen des gesetzten Layouts auf dem Folder und speichern in Dictionary (Hidden Field)
             layout = api.content.get(source_folder).getLayout()
-            self.layoutdict[action["target"]] = layout
+            #print(layout)
+            self.layout_dict[action["target"]] = layout
+
+            # Auslesen der Startseite des Folders und speichern in Dictionary (Hidden Field)
+            default_page = api.content.get(source_folder).getDefaultPage()
+            #print(default_page)
+            self.default_page_dict[action["target"]] = default_page            
             
         else:
             self.filesmissing = True
@@ -216,7 +227,14 @@ class BulkMoveView(BrowserView):
 
     def set_layouts(self):
         print("SET LAYOUT")
-        for key in self.layoutdict.keys():
-            print(key, ":", self.layoutdict[key])
+        for key in self.layout_dict.keys():
+            print(key, ":", self.layout_dict[key])
             obj = api.content.get(key)
-            obj.setLayout(self.layoutdict[key])
+            obj.setLayout(self.layout_dict[key])
+
+    def set_default_pages(self):
+        print("SET DEFAULT PAGES")
+        for key in self.default_page_dict.keys():
+            print(key, ":", self.default_page_dict[key])
+            obj = api.content.get(key)
+            obj.setDefaultPage(self.default_page_dict[key])
